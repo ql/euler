@@ -1,6 +1,6 @@
 require 'euler_helper.rb'
-NAME ="How many different ways can one hundred be written as a sum of at least two positive integers?"
-DESCRIPTION ="How many different ways can one hundred be written as a sum of at least two positive integers?"
+NAME ="Investigating the number of ways in which coins can be separated into piles."
+DESCRIPTION ="Find the least value of n for which p(n) is divisible by one million."
 
 def c n, memo
   count(n,n-1, memo) + 1
@@ -26,12 +26,11 @@ end
 
 def solve
   memo = {}
-  i = 449
+  i = 480
   pp = p2(i, memo)
   while pp  % 1_000_000 != 0
-    i+=5
+    i+=1
     pp = p2(i, memo)
-    puts "#{i} ! #{pp}" if pp%1000 == 0
   end
   i
 end
@@ -40,18 +39,20 @@ def penta q
  (3*(q**2)-q)/2
 end
 
+def ubound n
+  ((1+Math.sqrt(1+24*n)) / 6).ceil
+end
+
 def p2 n, memo = {}
+  return 0 if n < 0
   memo[n] ||= if n == 0
     1
-  elsif n < 0 
-    0
   else
-    (1..n).inject(0) {|acc, i| acc += (-1)**(i+1)*p2(n-penta(i), memo) + (-1)**(i+1)*p2(n-penta(-i), memo) } 
+    (1..ubound(n)).inject(0) {|acc, i| acc += (-1)**(i+1)*p2(n-penta(i), memo) + (-1)**(i+1)*p2(n-penta(-i), memo) } 
   end
   
 end
 
-m = 1000
 benchmark do
   puts solve
 end
